@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shri Infinite Debt & Bureaucracy Institute of Technology (SIDBIT)</title>
+    <style>
+        /* GLOBAL AWFUL STYLES */
+        :root {
+            --worst-yellow: #CCCC00;
+            --worst-cyan: #00FFFF;
+            --worst-magenta: #FF00FF;
+            --worst-blue: #00008B;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Comic Sans MS", "Chalkboard SE", "Times New Roman", serif;
+            overflow-x: hidden;
+            background-image: repeating-linear-gradient(
+                45deg,
+                #ffffff,
+                #ffffff 5px,
+                #e0e0e0 5px,
+                #e0e0e0 10px
+            );
+            /* Giant, unhelpful cursor that blocks clicks */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="18" fill="red" opacity="0.5"/><text x="8" y="25" font-size="20" fill="black">🚫</text></svg>'), auto;
+        }
+
+        button {
+            cursor: crosshair;
+        }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--worst-blue);
+            color: var(--worst-yellow);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--worst-magenta);
+            border: 15px ridge var(--worst-cyan);
+            padding: 20px 40px;
+            width: 80%;
+            max-width: 650px;
+            box-shadow: 20px 20px 0px black;
+        }
+
+        .awful-input-area {
+            background: white;
+            color: black;
+            border: 5px dashed red;
+            padding: 20px;
+            margin: 10px 0;
+            font-size: 1.2rem;
+            font-family: monospace;
+            min-height: 30px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .login-controls button {
+            background: var(--worst-yellow);
+            color: var(--worst-blue);
+            border: 3px solid black;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        @keyframes panicFlash {
+            0% { background: red; color: yellow; }
+            50% { background: yellow; color: red; }
+            100% { background: red; color: yellow; }
+        }
+        
+        /* THE TERRIBLE CAPTCHA */
+        .captcha-container {
+            background: black;
+            border: 5px double yellow;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .distorted-captcha {
+            font-size: 1.2rem;
+            color: white;
+            text-shadow: 2px 2px 0 red, -2px -2px 0 blue;
+            letter-spacing: 3px;
+            animation: captchaBlur 0.5s infinite alternate;
+            user-select: none;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes captchaBlur {
+            0% { filter: blur(0px) skewX(0deg); opacity: 1; }
+            50% { filter: blur(2px) skewX(20deg); opacity: 0.8; }
+            100% { filter: blur(1px) skewX(-20deg); opacity: 0.9; }
+        }
+
+        /* BUTTON SWARM STYLES */
+        #button-swarm {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            border: 5px dashed var(--worst-yellow);
+            background: #222;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        @keyframes swarmSpin {
+            0% { transform: rotate(0deg) translateX(40px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(40px) rotate(-360deg); }
+        }
+
+        /* SKIP BUTTON STYLES */
+        .skip-btn-visible {
+            background: orange;
+            color: black;
+            font-size: 1.2rem;
+            font-weight: 900;
+            padding: 15px;
+            border: 5px dashed red;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 5px 5px 0 yellow;
+            animation: shake 2s infinite;
+        }
+
+        /* --- HAPPY BIRTHDAY OVERLAY --- */
+        #bday-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(45deg, #ff0000, #ffff00, #ff00ff, #00ffff);
+            background-size: 400% 400%;
+            z-index: 9999999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: partyBg 2s infinite;
+        }
+
+        @keyframes partyBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #bday-overlay h1 {
+            font-size: 8rem;
+            color: white;
+            text-shadow: 10px 10px 0 black;
+            text-align: center;
+            animation: bdayBounce 0.5s infinite alternate;
+        }
+
+        @keyframes bdayBounce {
+            0% { transform: scale(1) rotate(-5deg); }
+            100% { transform: scale(1.2) rotate(5deg); }
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 5rem;
+            animation: floatBalloon 4s linear infinite;
+        }
+
+        @keyframes floatBalloon {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- CUSTOM MODALS (UNBLOCKABLE) --- */
+        #custom-alert-modal, #punishment-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 999999999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: monospace;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #custom-alert-modal { background: rgba(255, 0, 0, 0.9); color: yellow; z-index: 9999999999; /* Added an extra 9 so it sits on top! */ }
+        #punishment-modal { background: rgba(0, 0, 0, 0.95); border: 15px solid red; }
+
+        .modal-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: 3px solid white;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px;
+            transition: transform 0.15s ease-out, background 0.2s, font-size 0.2s; /* Smooth running away */
+        }
+
+        /* --- MAIN SITE SCREEN --- */
+        #main-site {
+            display: none; /* Hidden until login */
+            transition: all 1s ease-in-out;
+        }
+
+        header {
+            background: var(--worst-cyan);
+            border-bottom: 10px solid var(--worst-magenta);
+            padding: 10px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--worst-blue);
+            text-shadow: 2px 2px 0px var(--worst-yellow);
+            font-size: 3rem;
+            letter-spacing: -2px;
+            text-transform: lowercase;
+            margin: 0;
+            animation: squish 2s infinite;
+        }
+
+        @keyframes squish {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.5); }
+        }
+
+        .marquee-wrapper {
+            background: red;
+            color: yellow;
+            font-weight: 900;
+            font-size: 1.5rem;
+            padding: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Horrible Navigation */
+        nav {
+            background: var(--worst-blue);
+            padding: 5px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .nav-tab {
+            background: #444;
+            color: white;
+            border: 2px solid white;
+            padding: 15px 20px;
+            font-family: "Times New Roman", serif;
+            font-size: 1.2rem;
+            text-decoration: none;
+            flex-grow: 1;
+            text-align: center;
+            margin: 2px;
+        }
+
+        .nav-tab:hover {
+            background: white;
+            color: black;
+            font-size: 0.5rem; /* Shrinks so you can't read it */
+        }
+
+        /* Layout Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 200px 1fr 250px;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .sidebar {
+            background: var(--worst-yellow);
+            border: 5px inset orange;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .main-content {
+            background: white;
+            border: 3px double black;
+            padding: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .news-item {
+            border: 2px solid var(--worst-blue);
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .news-item h3 {
+            background: var(--worst-blue);
+            color: white;
+            margin: -10px -10px 10px -10px;
+            padding: 5px;
+        }
+
+        /* Fake Modals for Admissions Tab */
+        .fake-modal {
+            position: fixed;
+            width: 300px;
+            background: red;
+            color: white;
+            border: 10px solid yellow;
+            padding: 20px;
+            z-index: 9999;
+            box-shadow: 10px 10px 0 black;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        /* --- TERRIFYING TAB EFFECTS STYLES --- */
+        .effect-shake { animation: violentShake 0.1s infinite !important; }
+        @keyframes violentShake {
+            0% { transform: translate(10px, 10px) rotate(5deg); }
+            25% { transform: translate(-10px, -10px) rotate(-5deg); }
+            50% { transform: translate(10px, -10px) rotate(5deg); }
+            75% { transform: translate(-10px, 10px) rotate(-5deg); }
+            100% { transform: translate(10px, 10px) rotate(5deg); }
+        }
+        .effect-blur { color: transparent !important; text-shadow: 0 0 8px rgba(0,0,0,0.8) !important; transition: all 1s; }
+        .effect-faculty-hell { 
+            direction: rtl !important; 
+            unicode-bidi: bidi-override !important; 
+            background-color: black !important; 
+            color: lime !important; 
+            font-family: 'Courier New', monospace !important; 
+            transform: perspective(500px) rotateX(10deg);
+        }
+        .effect-faculty-hell * {
+            background-color: transparent !important;
+            color: lime !important;
+            border-color: lime !important;
+        }
+        .effect-upsidedown { transform: rotate(180deg) !important; transition: transform 2s ease-in-out; }
+
+        @media (max-width: 800px) { .grid-container { display: block; } }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         CUSTOM UNBLOCKABLE ALERTS & MODALS
+         ========================================== -->
+    <div id="custom-alert-modal">
+        <h1 id="custom-alert-text" style="font-size: 2rem; margin-bottom: 30px;">Alert</h1>
+        <button id="custom-alert-btn" style="padding:15px 30px; font-size:1.2rem; background:black; color:white; border:3px solid yellow; cursor:pointer;">OK I UNDERSTAND</button>
+    </div>
+
+    <div id="punishment-modal">
+        <h2 id="punishment-q-text" style="color: yellow; margin-bottom: 20px; font-size: 2rem; max-width: 800px; line-height: 1.5;">Question</h2>
+        <input type="text" id="punishment-input" style="display:none; padding:15px; width:80%; max-width:400px; font-size:1.5rem; margin-bottom:20px; font-family: monospace;">
+        <div style="display:flex; gap:20px;">
+            <button id="punishment-btn-1" class="modal-btn" style="background:lime; color:black;"></button>
+            <button id="punishment-btn-2" class="modal-btn" style="background:red; color:white;"></button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         BIRTHDAY OVERLAY TRAP
+         ========================================== -->
+    <div id="bday-overlay">
+        <h1>HAPPY BIRTHDAY!!! 🎈🎂🎈</h1>
+        <!-- Balloons will be injected here by JS -->
+    </div>
+
+    <!-- ==========================================
+         LOGIN SCREEN NIGHTMARE
+         ========================================== -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h1 style="font-size: 2rem; margin-top: 0;">STUDENT PORTAL</h1>
+            <p>Enter credentials using our highly secure, empathy-free proprietary input system.</p>
+            
+            <h3 style="text-align: left; margin-bottom: 0;">1. Type Your Partner's Name:</h3>
+            <p style="font-size: 0.8rem; text-align: left; margin-top: 0;">(Must be filled. Cannot be same letters or in alphabetical sequence. The alphabet is scrambled to test your patience.)</p>
+            <div class="awful-input-area" id="username-display"></div>
+            
+            <div class="login-controls">
+                <div style="font-size: 3rem; background: black; color: white; display: inline-block; width: 60px; height: 60px; line-height: 60px; border-radius: 50%; border: 3px solid white;" id="current-letter">Q</div><br>
+                <button onclick="cycleLetter()">Next Letter</button>
+                <button onclick="addLetter()">Add Letter</button>
+                <button onclick="clearUsername()" style="background: red; color: white;">Clear</button>
+            </div>
+            
+            <p style="padding: 10px; margin-top: 15px; border: 3px dashed white; font-weight: bold; font-size: 0.9rem; animation: panicFlash 0.5s infinite;">NOTE: If you fail to write your partner's name, you'll be a bachelor for the rest of your life.</p>
+
+            <h3 style="text-align: left; margin-bottom: 0; margin-top: 15px;">2. Enter Password (DOB Match):</h3>
+            <p style="font-size: 0.8rem; text-align: left; margin-top: 0;">Enter your DOB (must be before 2009) and the EXACT day of the week you were born.</p>
+            <div style="display: flex; gap: 5px; margin: 10px 0;">
+                <input type="number" id="dob-dd" placeholder="DD" min="1" max="31" style="flex:1; padding: 10px; border: 3px solid var(--worst-blue); font-family: monospace;">
+                <input type="number" id="dob-mm" placeholder="MM" min="1" max="12" style="flex:1; padding: 10px; border: 3px solid var(--worst-blue); font-family: monospace;">
+                <input type="number" id="dob-yyyy" placeholder="YYYY" min="1900" max="2026" style="flex:1; padding: 10px; border: 3px solid var(--worst-blue); font-family: monospace;">
+                
+                <select id="day-input" style="flex:2; padding: 10px; border: 3px solid var(--worst-magenta); font-family: monospace;">
+                    <option value="">-- Select Day --</option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
+            </div>
+            
+            <h3 style="text-align: left; margin-bottom: 0; margin-top: 15px;">3. Human Verification (CAPTCHA):</h3>
+            <div class="captcha-container">
+                <div class="distorted-captcha" id="captcha-question">Loading misery...</div>
+                <button onclick="refreshCaptcha()" style="background: var(--worst-cyan); color: black; font-size: 0.8rem; padding: 5px;">Refresh CAPTCHA</button>
+                <br><br>
+                <input type="text" id="captcha-input" placeholder="Enter your existential dread here..." style="width: 90%; padding: 10px; font-family: 'Comic Sans MS'; border: 3px dashed var(--worst-magenta);">
+                <br>
+                <label style="font-size: 0.8rem; display: inline-block; margin-top: 10px; color: var(--worst-yellow);">
+                    <input type="checkbox" id="robot-check">
+                    I swear I am not a robot (but I am definitely a disappointed engineering student)
+                </label>
+            </div>
+
+            <h3 style="text-align: left; margin-bottom: 0; margin-top: 15px;">4. Find the Real Login Button:</h3>
+            <p style="font-size: 0.8rem; text-align: left; margin-top: 0;">There are 50 buttons. Only 1 is real. Good luck hunting.</p>
+            
+            <div id="button-swarm">
+                <!-- 50 Buttons injected here -->
+            </div>
+            
+            <!-- Visible, Taunting Skip Button Error Box -->
+            <div id="skip-error-msg" style="display:none; background: red; color: yellow; padding: 10px; font-weight: bold; border: 3px dashed yellow; margin-top: 20px;"></div>
+
+            <button class="skip-btn-visible" onclick="startPunishment()">SKIP (For weak students who can't clear backlogs)</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MAIN COLLEGE WEBSITE
+         ========================================== -->
+    <div id="main-site">
+        <header>
+            <h1>Shri Infinite Debt & Bureaucracy Institute of Technology</h1>
+            <p style="font-weight: bold;">"75% Attendance is mandatory, breathing is optional."</p>
+        </header>
+
+        <div class="marquee-wrapper">
+            <marquee scrollamount="25">
+                URGENT: Defaulter list is out! Pay your fees by yesterday or your degree will be withheld. || Mess food has been declared a biohazard by WHO, but you still have to pay for it. || Placement cell guarantees 100% placement (in mass recruiters at 3.2 LPA). || The server for filling exam forms will be down during the entire deadline.
+            </marquee>
+        </div>
+
+        <nav>
+            <div class="nav-tab" onclick="triggerHomeFeature()">HOME</div>
+            <div class="nav-tab" onclick="triggerAcademicsFeature()">ACADEMICS</div>
+            <div class="nav-tab" onclick="triggerFacultyFeature()">FACULTY</div>
+            <div class="nav-tab" onclick="triggerAdmissionsFeature()">ADMISSIONS</div>
+            <div class="nav-tab" onclick="triggerAlumniFeature()">ALUMNI</div>
+        </nav>
+
+        <div class="grid-container" id="content-grid">
+            <div class="sidebar">
+                <h3 style="background: black; color: white; padding: 5px;">QUICK LINKS</h3>
+                <ul style="padding-left: 15px;">
+                    <li><a href="#" style="color: blue;">Library (AC doesn't work, strictly for sleeping)</a></li>
+                    <li><a href="#" style="color: blue;">Placement Cell (TCS/Infosys mass recruitment portal)</a></li>
+                    <li><a href="#" style="color: blue;">Scholarship Desk (Clerk is always on Lunch Break)</a></li>
+                    <li><a href="#" style="color: blue;">Accounts Office (Come tomorrow, server is down)</a></li>
+                </ul>
+                <h3 style="background: black; color: white; padding: 5px; margin-top: 30px;">UPCOMING EVENTS</h3>
+                <p><strong>Date TBD:</strong> Surprise Viva Voce (to ruin your weekend).</p>
+            </div>
+
+            <div class="main-content" id="middle-content">
+                <img src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=800&q=20" alt="Campus" style="width: 100%; border: 5px solid red; filter: contrast(150%) sepia(50%);">
+                
+                <h2 style="color: var(--worst-magenta); text-decoration: underline;">Welcome, Freshers (Class of 2028)!</h2>
+                
+                <div class="news-item">
+                    <h3>Hostel Allocation Update</h3>
+                    <p>Due to "overwhelming demand", 1st-year boys will share a 2-seater room with 4 other people and a family of lizards. <strong>Bring your own bucket, water supply is highly conditional.</strong></p>
+                </div>
+
+                <div class="news-item">
+                    <h3>Curriculum Changes</h3>
+                    <p>The UGC has added a new core subject: <em>Advanced Bootlicking for Internal Marks</em>. Practical exams will strictly test your ability to hand-write 500 pages in 10 minutes.</p>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <h3 style="background: black; color: white; padding: 5px;">ADVERTISEMENTS</h3>
+                <div style="background: cyan; border: 2px solid blue; padding: 10px; margin-bottom: 20px; text-align: center; animation: blink 0.5s infinite;">
+                    <strong style="color: red; font-size: 1.2rem;">LOCAL PUBLISHER BOOKS!</strong><br>
+                    Forget foreign authors! Pass exams by memorizing our 10-year-old solved question banks! Only ₹400!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONTAINER FOR ADMISSIONS SPAM -->
+    <div id="modal-container"></div>
+
+    <script>
+        /* ==========================================
+           CUSTOM ALERTS (To bypass browser blocking)
+           ========================================== */
+        function alertModal(msg, callback) {
+            const am = document.getElementById('custom-alert-modal');
+            const btn = document.getElementById('custom-alert-btn');
+            document.getElementById('custom-alert-text').innerText = msg;
+            am.style.display = 'flex';
+            
+            btn.onclick = () => {
+                am.style.display = 'none';
+                if(callback) callback();
+            };
+        }
+
+        /* ==========================================
+           INITIALIZATION
+           ========================================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            initSwarm();
+            refreshCaptcha();
+            setupDobListeners();
+        });
+
+        /* ==========================================
+           LOGIN SCREEN LOGIC
+           ========================================== */
+        
+        const alphabet = "QWERTYUIOPASDFGHJKLZXCVBNM ";
+        let letterIndex = 0;
+
+        function cycleLetter() {
+            letterIndex = (letterIndex + 1) % alphabet.length;
+            document.getElementById('current-letter').innerText = alphabet[letterIndex] === " " ? "SPACE" : alphabet[letterIndex];
+        }
+
+        function addLetter() {
+            const display = document.getElementById('username-display');
+            display.innerText += alphabet[letterIndex];
+        }
+
+        function clearUsername() {
+            document.getElementById('username-display').innerText = "";
+        }
+        
+        function isSequential(str) {
+            const normalAlpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const revAlpha = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
+            return str.length >= 3 && (normalAlpha.includes(str) || revAlpha.includes(str));
+        }
+        
+        const captchaQuestions = [
+            "Solve: (CGPA × 0) + Expectations of Sharma Ji Ka Beta = ?",
+            "If attendance is 74.9%, how many tears will you shed in the HOD's cabin?",
+            "Write the exact pronunciation of your Professor's sneezes.",
+            "If hostel mess fee is ₹40,000 and you only survive on Maggi, how much money did the college scam you for?",
+            "Type the exact fake excuse you give for proxy attendance."
+        ];
+
+        function refreshCaptcha() {
+            const q = captchaQuestions[Math.floor(Math.random() * captchaQuestions.length)];
+            document.getElementById('captcha-question').innerText = q;
+        }
+
+        function initSwarm() {
+            const container = document.getElementById('button-swarm');
+            container.innerHTML = ""; 
+            const btnCount = 50;
+            const realIndex = Math.floor(Math.random() * btnCount);
+            
+            for (let i = 0; i < btnCount; i++) {
+                let btn = document.createElement('button');
+                btn.innerText = "LOGIN";
+                btn.style.position = 'absolute';
+                btn.style.left = (Math.random() * 85) + '%';
+                btn.style.top = (Math.random() * 80) + '%';
+                btn.style.padding = '8px 12px';
+                btn.style.background = i % 2 === 0 ? 'lime' : 'yellow';
+                btn.style.color = 'red';
+                btn.style.border = '2px solid black';
+                btn.style.fontWeight = 'bold';
+                btn.style.fontSize = '0.9rem';
+                btn.style.zIndex = Math.floor(Math.random() * 10);
+                
+                let dur = Math.random() * 3 + 1; 
+                btn.style.animation = `swarmSpin ${dur}s linear infinite`;
+                
+                if (i === realIndex) {
+                    btn.onclick = attemptLogin; 
+                } else {
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        const insults = [
+                            "Wrong button, loser. Keep hunting!", 
+                            "Missed it! Your hand-eye coordination is as bad as your grades.",
+                            "Nope. Not this one. Are you even trying?",
+                            "Fake button! You've been scammed. Again."
+                        ];
+                        alertModal(insults[Math.floor(Math.random() * insults.length)]);
+                    };
+                }
+                container.appendChild(btn);
+            }
+        }
+
+        // DOB matching logic
+        let bdayShown = false;
+        let bdayAudioCtx, activeBdayOscillator;
+        
+        function setupDobListeners() {
+            const dobFields = ['dob-dd', 'dob-mm', 'dob-yyyy', 'day-input'];
+            dobFields.forEach(id => {
+                document.getElementById(id).addEventListener('input', checkDobMatch);
+                document.getElementById(id).addEventListener('change', checkDobMatch);
+            });
+        }
+
+        function checkDobMatch() {
+            if (bdayShown) return;
+
+            const dd = parseInt(document.getElementById('dob-dd').value);
+            const mm = parseInt(document.getElementById('dob-mm').value);
+            const yyyy = parseInt(document.getElementById('dob-yyyy').value);
+            const dayStr = document.getElementById('day-input').value;
+            
+            if(!dd || !mm || !yyyy || !dayStr) return;
+            if(yyyy >= 2009) return;
+
+            const dateObj = new Date(yyyy, mm - 1, dd);
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const realDay = daysOfWeek[dateObj.getDay()];
+            
+            if(dateObj.getDate() === dd && dateObj.getMonth() === (mm - 1) && dateObj.getFullYear() === yyyy) {
+                if(realDay === dayStr) {
+                    bdayShown = true;
+                    showBdayParty();
+                }
+            }
+        }
+
+        function playEarBleedingBirthday() {
+            if (!bdayAudioCtx) bdayAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (bdayAudioCtx.state === 'suspended') bdayAudioCtx.resume();
+
+            activeBdayOscillator = bdayAudioCtx.createOscillator();
+            const gain = bdayAudioCtx.createGain();
+            
+            activeBdayOscillator.type = 'sawtooth';
+            activeBdayOscillator.connect(gain);
+            gain.connect(bdayAudioCtx.destination);
+            gain.gain.value = 0.15; 
+
+            const melody = [
+                [392, 0.3], [392, 0.3], [440, 0.6], [392, 0.6], [523, 0.6], [493.88, 1.2],
+                [392, 0.3], [392, 0.3], [440, 0.6], [392, 0.6], [587.33, 0.6], [523, 1.2]
+            ];
+
+            let time = bdayAudioCtx.currentTime;
+            activeBdayOscillator.start(time);
+            
+            melody.forEach(note => {
+                activeBdayOscillator.frequency.setValueAtTime(note[0], time);
+                time += note[1];
+            });
+            
+            activeBdayOscillator.stop(time + 0.5);
+        }
+
+        function showBdayParty() {
+            const overlay = document.getElementById('bday-overlay');
+            overlay.style.display = 'flex';
+            
+            try { playEarBleedingBirthday(); } catch (e) { console.log("Audio block."); }
+            
+            for(let i=0; i<20; i++) {
+                const b = document.createElement('div');
+                b.className = 'balloon';
+                b.innerText = ['🎈', '🎂', '🎉', '🎊'][Math.floor(Math.random() * 4)];
+                b.style.left = Math.random() * 90 + 'vw';
+                b.style.animationDelay = (Math.random() * 2) + 's';
+                overlay.appendChild(b);
+            }
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                overlay.innerHTML = '<h1>HAPPY BIRTHDAY!!! 🎈🎂🎈</h1>'; 
+                
+                if (activeBdayOscillator) {
+                    try { activeBdayOscillator.stop(); } catch(e) {}
+                }
+
+                alertModal("Okay, party's over. Now click the correct login button AGAIN to actually enter.", initSwarm);
+            }, 5000);
+        }
+
+        let loginAttempts = 0;
+
+        function attemptLogin(e) {
+            e.preventDefault();
+            
+            const partnerName = document.getElementById('username-display').innerText.trim().replace(/\s/g, '');
+            const dd = parseInt(document.getElementById('dob-dd').value);
+            const mm = parseInt(document.getElementById('dob-mm').value);
+            const yyyy = parseInt(document.getElementById('dob-yyyy').value);
+            const dayStr = document.getElementById('day-input').value;
+            const checkbox = document.getElementById('robot-check');
+            
+            if(!partnerName) return alertModal("COMPULSORY: You must enter a partner's name. Don't leave it blank just because you're single.");
+            if(new Set(partnerName.split('')).size === 1) return alertModal("INVALID NAME: All letters cannot be the same. 'AAAAA' is not a real person.");
+            if(isSequential(partnerName)) return alertModal("INVALID NAME: You cannot use letters in alphabetical sequence (like ABCD). Be creative!");
+
+            if(!dd || !mm || !yyyy || !dayStr) return alertModal("COMPULSORY: You must fill out your complete Date of Birth and select the exact Day. Do not leave it blank.");
+            if(yyyy >= 2009) return alertModal("AGE RESTRICTION: You must be born BEFORE 2009. Go back to playing Roblox.");
+
+            const dateObj = new Date(yyyy, mm - 1, dd); 
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const realDay = daysOfWeek[dateObj.getDay()];
+            
+            if(dateObj.getDate() !== dd || dateObj.getMonth() !== (mm - 1) || dateObj.getFullYear() !== yyyy) {
+                return alertModal("LIAR! That is not a valid date on the calendar. Try again.");
+            }
+            if(realDay !== dayStr) {
+                return alertModal(`LIAR! The calendar says ${dd}/${mm}/${yyyy} was a ${realDay}, not a ${dayStr}. You don't even know the day you were born!`);
+            }
+            
+            if (!checkbox.checked) return alertModal("ERROR: You forgot to check the box confirming you are a disappointed engineering student.");
+
+            loginAttempts++;
+            if (loginAttempts < 3) {
+                const sarcasticFails = [
+                    "Everything is correct, but we rejected you anyway. Beta, tumse na ho payega. Find the real button again.",
+                    "Almost there! But the server went for a tea break. Try finding the button one more time!"
+                ];
+                alertModal(sarcasticFails[loginAttempts - 1], () => {
+                    initSwarm();
+                    checkbox.checked = false; 
+                });
+                return;
+            }
+
+            if (!bdayShown) {
+                bdayShown = true;
+                showBdayParty();
+                return;
+            }
+            
+            alertModal("Wow, you actually survived the ordeal. Welcome to your nightmare.", forceLogin);
+        }
+
+        /* ==========================================
+           5. SKIP BUTTON LOGIC (6 SARCASTIC QUESTIONS)
+           ========================================== */
+        let currentQuestion = 1;
+
+        function startPunishment() {
+            const errorMsg = document.getElementById('skip-error-msg');
+            errorMsg.style.display = 'none';
+
+            const partnerName = document.getElementById('username-display').innerText.trim().replace(/\s/g, '');
+            const dd = parseInt(document.getElementById('dob-dd').value);
+            const mm = parseInt(document.getElementById('dob-mm').value);
+            const yyyy = parseInt(document.getElementById('dob-yyyy').value);
+            const dayStr = document.getElementById('day-input').value;
+            const captchaText = document.getElementById('captcha-input').value.trim();
+            const checkbox = document.getElementById('robot-check').checked;
+
+            if(!partnerName || new Set(partnerName.split('')).size === 1 || isSequential(partnerName)) {
+                errorMsg.innerText = "ACCESS DENIED: Enter a valid Partner's Name first. No fake sequence letters!";
+                errorMsg.style.display = 'block';
+                return;
+            }
+            if(!dd || !mm || !yyyy || !dayStr) {
+                errorMsg.innerText = "ACCESS DENIED: Fill out your Date of Birth and the exact Day first.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+            if (yyyy >= 2009) {
+                errorMsg.innerText = "ACCESS DENIED: You must be born BEFORE 2009.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const dateObj = new Date(yyyy, mm - 1, dd);
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const realDay = daysOfWeek[dateObj.getDay()];
+            
+            if(dateObj.getDate() !== dd || dateObj.getMonth() !== (mm - 1) || dateObj.getFullYear() !== yyyy || realDay !== dayStr) {
+                errorMsg.innerText = "ACCESS DENIED: Your Date of Birth and Day do not match the real calendar.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            if(!captchaText) {
+                errorMsg.innerText = "ACCESS DENIED: You left the existential dread CAPTCHA box blank. Type something!";
+                errorMsg.style.display = 'block';
+                return;
+            }
+            if(!checkbox) {
+                errorMsg.innerText = "ACCESS DENIED: Check the 'not a robot' box first.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Forms filled correctly. Launch 10 sarcastic questions!
+            currentQuestion = 1;
+            showPunishmentQuestion();
+        }
+
+        // Helper function to make buttons run away!
+        function makeEvade(btn, maxDodges) {
+            let dodges = 0;
+            // Extremely fast transition so it teleports away from the mouse
+            btn.style.transition = 'transform 0.05s ease-out';
+            
+            btn.onmouseover = () => {
+                if (dodges < maxDodges) {
+                    // DYNAMIC SCREEN SCALING: It will now jump across 70% of your current screen size!
+                    const jumpBoundsX = window.innerWidth * 0.7; 
+                    const jumpBoundsY = window.innerHeight * 0.7; 
+                    
+                    const rx = (Math.random() - 0.5) * jumpBoundsX;
+                    const ry = (Math.random() - 0.5) * jumpBoundsY;
+                    
+                    btn.style.transform = `translate(${rx}px, ${ry}px)`;
+                    dodges++;
+                } else {
+                    btn.style.transition = 'transform 0.3s ease';
+                    btn.style.transform = `translate(0px, 0px) scale(1)`;
+                    btn.innerText = "UGH, FINE. CLICK.";
+                }
+            };
+        }
+
+        function showPunishmentQuestion() {
+            const modal = document.getElementById('punishment-modal');
+            const qText = document.getElementById('punishment-q-text');
+            const input = document.getElementById('punishment-input');
+            const btn1 = document.getElementById('punishment-btn-1');
+            const btn2 = document.getElementById('punishment-btn-2');
+            
+            modal.style.display = 'flex';
+            input.style.display = 'none';
+            input.value = '';
+            input.placeholder = '';
+            
+            // Completely reset buttons visibility and remove any tricky effects from the previous question
+            btn1.style.cssText = "background:lime; color:black; display:block; position:static; top:auto; left:auto; font-size:1.2rem; padding:15px 30px; opacity:1; transform:none;";
+            btn2.style.cssText = "background:red; color:white; display:block; position:static; top:auto; left:auto; font-size:1.2rem; padding:15px 30px; opacity:1; transform:none;";
+            btn1.className = 'modal-btn';
+            btn2.className = 'modal-btn';
+            btn1.onmouseover = null;
+            btn2.onmouseover = null;
+            btn1.onmouseenter = null;
+            btn2.onmouseenter = null;
+            input.onmouseleave = null; // Clear input traps
+            
+            if (currentQuestion === 1) {
+                qText.innerText = "Oh, giving up on finding the real button already? Catch the button if you really want to quit.";
+                btn1.innerText = "I SUBMIT TO DEFEAT";
+                btn2.innerText = "I AM A COWARD";
+                makeEvade(btn1, 15); // Increased to 15 chases
+                makeEvade(btn2, 15);
+                btn1.onclick = btn2.onclick = () => { currentQuestion++; showPunishmentQuestion(); };
+            } 
+            else if (currentQuestion === 2) {
+                qText.innerText = "Do you honestly believe you deserve to skip this? Type 'I AM A COMPLETE FAILURE' BACKWARDS below (ERULIAF ETELPMOC A MA I):";
+                input.style.display = 'block';
+                input.placeholder = "Type it backwards...";
+                btn1.innerText = "SUBMIT MY SHAME";
+                btn2.style.display = 'none';
+                
+                // Shrinks AND teleports randomly when hovered to ruin accuracy
+                btn1.onmouseover = () => { 
+                    btn1.style.transform = `scale(0.15) translate(${(Math.random() - 0.5) * 500}px, ${(Math.random() - 0.5) * 500}px)`; 
+                };
+                btn1.onmouseout = () => { btn1.style.transform = 'scale(1)'; };
+                
+                btn1.onclick = () => {
+                    if(input.value.trim() === "ERULIAF ETELPMOC A MA I") {
+                        currentQuestion++; showPunishmentQuestion();
+                    } else {
+                        alertModal("Wrong! You must type it exactly backwards. Try again.");
+                    }
+                };
+            }
+            else if (currentQuestion === 3) {
+                qText.innerText = "Which is truly worse: Your attendance record or your fashion sense?";
+                btn1.innerText = "MY ATTENDANCE";
+                btn2.innerText = "MY FASHION SENSE";
+                
+                let q3StartTime = Date.now(); 
+                
+                // Scrambles the buttons incredibly fast to induce anxiety
+                let scrambleInterval = setInterval(() => {
+                    if (currentQuestion !== 3) { clearInterval(scrambleInterval); return; }
+                    let temp = btn1.innerText;
+                    btn1.innerText = btn2.innerText;
+                    btn2.innerText = temp;
+                }, 50);
+
+                btn1.onclick = btn2.onclick = () => { 
+                    let timeElapsed = (Date.now() - q3StartTime) / 1000;
+                    
+                    if (timeElapsed < 10) {
+                        alertModal("You didn't think about it deeply enough. Reflect on your choices!");
+                        q3StartTime = Date.now(); 
+                    } else {
+                        clearInterval(scrambleInterval);
+                        alertModal("Correct. Both are terrible.", () => { currentQuestion++; showPunishmentQuestion(); }); 
+                    }
+                };
+            }
+            else if (currentQuestion === 4) {
+                qText.innerText = "A train leaves Delhi at 60km/h. If your CGPA is 4.2, how many years until you get a campus placement?";
+                btn1.innerText = "5 YEARS";
+                btn2.innerText = "NEVER";
+                
+                // The right answer is tiny, spins wildly, and runs away 35 times!
+                makeEvade(btn2, 35); 
+                btn2.style.fontSize = '8px';
+                btn2.style.padding = '5px';
+                btn2.style.animation = 'swarmSpin 0.1s linear infinite';
+                
+                let stalkerClicks = 0;
+                
+                // The Stalker Button now aggressively tries to stay right under your mouse
+                const stalkerMove = (e) => {
+                    if (currentQuestion !== 4) {
+                        document.removeEventListener('mousemove', stalkerMove);
+                        return;
+                    }
+                    btn1.style.position = 'fixed';
+                    btn1.style.left = (e.clientX - 40) + 'px';
+                    btn1.style.top = (e.clientY - 20) + 'px'; 
+                    btn1.style.zIndex = '9999999';
+                };
+                
+                document.addEventListener('mousemove', stalkerMove);
+                
+                btn1.onclick = () => { 
+                    stalkerClicks++;
+                    if (stalkerClicks >= 5) {
+                        // Free the cursor!
+                        document.removeEventListener('mousemove', stalkerMove);
+                        btn1.style.position = 'static';
+                        btn1.innerText = "OKAY, I GIVE UP";
+                        alertModal("Fine, the stalker button is exhausted and gave up. You may now chase the NEVER button in peace.");
+                    } else {
+                        alertModal("Wrong! You accidentally clicked the stalker button. Try again!"); 
+                    }
+                };
+                
+                btn2.onclick = () => { 
+                    document.removeEventListener('mousemove', stalkerMove);
+                    currentQuestion++; 
+                    showPunishmentQuestion(); 
+                };
+            }
+            else if (currentQuestion === 5) {
+                qText.innerText = "Who is truly responsible for your terrible CGPA? (Hint: Type your FULL NAME, first and last name required)";
+                input.style.display = 'block';
+                btn1.innerText = "ACCEPT BLAME";
+                btn2.style.display = 'none';
+                
+                // Button spins wildly AND shakes on hover
+                btn1.onmouseover = () => { 
+                    btn1.style.transform = `rotate(${Math.random() * 1080}deg)`; 
+                    btn1.classList.add('effect-shake');
+                };
+                
+                btn1.onclick = () => {
+                    if(input.value.trim().split(' ').length >= 2 && input.value.trim().length >= 5) {
+                        currentQuestion++; showPunishmentQuestion();
+                    } else {
+                        alertModal("We need your FULL NAME (First and Last, separated by a space). Don't hide!");
+                    }
+                };
+            }
+            else if (currentQuestion === 6) {
+                qText.innerText = "Is your back hurting from carrying the weight of all those uncleared backlogs?";
+                btn1.innerText = "YES IT HURTS";
+                btn2.innerText = "NO I'M FINE";
+                
+                // Right answer is fixed tiny to the top-left corner
+                btn1.style.position = 'fixed';
+                btn1.style.top = '10px';
+                btn1.style.left = '10px';
+                btn1.style.fontSize = '8px';
+                btn1.style.padding = '4px';
+                btn1.style.opacity = '0.5';
+                btn1.style.zIndex = '9999999999';
+                
+                btn1.onclick = () => { currentQuestion++; showPunishmentQuestion(); };
+                btn2.onclick = () => { alertModal("Denial is not a strategy. You must admit it hurts to proceed."); };
+            }
+            else if (currentQuestion === 7) {
+                qText.innerText = "Are you absolutely sure you don't not want to cancel abstaining from quitting?";
+                btn1.innerText = "YES?";
+                btn2.innerText = "NO?";
+                
+                makeEvade(btn1, 15);
+                makeEvade(btn2, 15);
+                
+                btn1.onclick = btn2.onclick = () => { currentQuestion++; showPunishmentQuestion(); };
+            }
+            else if (currentQuestion === 8) {
+                qText.innerText = "Type 'I WILL DONATE MY ORGANS TO THE HOD' to continue.";
+                input.style.display = 'block';
+                btn1.innerText = "SIGN MY LIFE AWAY";
+                btn2.style.display = 'none';
+                
+                // Mouse leave trap with a 1.5-second delay so they have a chance to reach the button!
+                let leaveTimeout;
+                input.onmouseleave = () => {
+                    if (input.value.length > 0) {
+                        leaveTimeout = setTimeout(() => {
+                            input.value = '';
+                            input.placeholder = "TOO SLOW! START OVER!";
+                        }, 1500);
+                    }
+                };
+                
+                // Cancel the deletion if they move the mouse back, or if they are actively chasing the button!
+                input.onmouseenter = () => clearTimeout(leaveTimeout);
+                btn1.addEventListener('mouseover', () => clearTimeout(leaveTimeout));
+
+                // Make them chase the button after typing!
+                makeEvade(btn1, 10);
+                
+                btn1.onclick = () => {
+                    clearTimeout(leaveTimeout);
+                    if(input.value.trim() === "I WILL DONATE MY ORGANS TO THE HOD") {
+                        currentQuestion++; showPunishmentQuestion();
+                    } else {
+                        alertModal("The HOD demands perfection! Punctuation matters! Try again.");
+                    }
+                };
+            }
+            else if (currentQuestion === 9) {
+                qText.innerText = "Choose your destiny carefully.";
+                btn1.innerText = "ENDLESS SUFFERING";
+                btn2.innerText = "UNEMPLOYMENT";
+                
+                // Orbits at warp speed
+                btn1.style.animation = 'swarmSpin 0.1s linear infinite';
+                btn2.style.animation = 'swarmSpin 0.15s linear infinite reverse';
+                
+                btn1.onclick = btn2.onclick = () => { currentQuestion++; showPunishmentQuestion(); };
+            }
+            else if (currentQuestion === 10) {
+                qText.innerText = "Final warning: The college portal inside is fundamentally broken and will make you cry. Do you still wish to proceed into the abyss?";
+                btn1.innerText = "PROCEED TO HELL";
+                btn2.innerText = "RUN AWAY (CANCEL)";
+                
+                // Ultimate boss battle: Chase the right answer 50 times!
+                makeEvade(btn1, 50); 
+                
+                btn1.onclick = () => { 
+                    modal.style.display = 'none';
+                    alertModal("Fine. I have zero respect for you, but I will let you in. Welcome to hell.", forceLogin);
+                };
+                btn2.onclick = () => { 
+                    modal.style.display = 'none';
+                    alertModal("A wise choice. You ran away.");
+                };
+            }
+        }
+
+        function forceLogin() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-site').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        /* ==========================================
+           MAIN SITE TABS - TERRIFYING FEATURES
+           ========================================== */
+        
+        function triggerHomeFeature() {
+            const body = document.body;
+            body.classList.add('effect-shake');
+            
+            const msg = document.createElement('div');
+            msg.innerText = "CRITICAL SERVER INSTABILITY! (Just like your career prospects)";
+            msg.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:red; color:yellow; font-size:4rem; font-weight:bold; z-index:99999; text-align:center; border:10px solid black;";
+            document.body.appendChild(msg);
+
+            setTimeout(() => {
+                body.classList.remove('effect-shake');
+                msg.remove();
+            }, 3000);
+        }
+
+        function triggerAcademicsFeature() {
+            const content = document.getElementById('content-grid');
+            content.classList.toggle('effect-blur');
+            showNastyMessage("Academics Portal Access", "Syllabus is out of bounds. All mid-term questions will be asked directly from the professor's personal diary. Please squint to decrypt.");
+        }
+
+        function triggerAdmissionsFeature() {
+            const container = document.getElementById('modal-container');
+            for(let i=0; i<15; i++) {
+                setTimeout(() => {
+                    const modal = document.createElement('div');
+                    modal.className = 'fake-modal';
+                    modal.innerHTML = `
+                        <p>MANAGEMENT QUOTA DONATION: Please pay ₹5,00,000 "building fund" to close this box.</p>
+                        <button onclick="this.parentElement.remove()" style="background:black; color:white; padding:10px; margin-top:10px;">Pay ₹5L & Close</button>
+                    `;
+                    let x = Math.random() * (window.innerWidth - 320);
+                    let y = Math.random() * (window.innerHeight - 200);
+                    modal.style.left = x + 'px';
+                    modal.style.top = y + 'px';
+                    container.appendChild(modal);
+                    
+                    let dx = (Math.random() - 0.5) * 10;
+                    let dy = (Math.random() - 0.5) * 10;
+                    setInterval(() => {
+                        if(!modal.parentElement) return;
+                        x += dx; y += dy;
+                        if(x <= 0 || x >= window.innerWidth - 320) dx = -dx;
+                        if(y <= 0 || y >= window.innerHeight - 200) dy = -dy;
+                        modal.style.left = x + 'px';
+                        modal.style.top = y + 'px';
+                    }, 50);
+                }, i * 200);
+            }
+        }
+
+        function triggerFacultyFeature() {
+            const content = document.getElementById('content-grid');
+            content.classList.toggle('effect-faculty-hell');
+            
+            for(let i=0; i<7; i++) {
+                setTimeout(() => {
+                    const prof = document.createElement('div');
+                    prof.className = 'faculty-popup'; // Tagging it so we can delete it later
+                    prof.style.position = 'fixed';
+                    prof.style.top = Math.random() * 80 + '%';
+                    prof.style.left = Math.random() * 80 + '%';
+                    prof.style.background = 'red';
+                    prof.style.color = 'yellow';
+                    prof.style.padding = '30px';
+                    prof.style.fontSize = '2.5rem';
+                    prof.style.fontWeight = '900';
+                    prof.style.zIndex = '9999999';
+                    prof.style.border = '10px solid black';
+                    prof.style.textTransform = 'uppercase';
+                    prof.style.boxShadow = '15px 15px 0 black';
+                    
+                    const insults = [
+                        "WHERE IS YOUR ID CARD?!",
+                        "SUBMIT ASSIGNMENT NOW!",
+                        "75% ATTENDANCE REQUIRED!",
+                        "YOU ARE LATE!",
+                        "OUT OF MY CLASS!"
+                    ];
+                    prof.innerHTML = `<div>${insults[Math.floor(Math.random() * insults.length)]}</div>`;
+                    
+                    const closeBtn = document.createElement('button');
+                    closeBtn.innerText = "X";
+                    closeBtn.style.padding = "5px 15px";
+                    closeBtn.style.marginTop = "10px";
+                    closeBtn.style.cursor = "crosshair";
+                    closeBtn.onmouseover = () => {
+                        closeBtn.style.transform = `translate(${(Math.random()-0.5)*200}px, ${(Math.random()-0.5)*200}px)`;
+                    };
+                    prof.appendChild(closeBtn);
+                    document.body.appendChild(prof);
+                    
+                    setInterval(() => {
+                        if (!prof.parentElement) return; // Stop shaking if removed
+                        prof.style.transform = `translate(${(Math.random()-0.5)*20}px, ${(Math.random()-0.5)*20}px)`;
+                        prof.style.background = Math.random() > 0.5 ? 'red' : 'black';
+                        prof.style.color = Math.random() > 0.5 ? 'yellow' : 'lime';
+                    }, 100);
+
+                }, i * 400);
+            }
+
+            showNastyMessage("Faculty Redirection", "All text is reversed, neon green, and distorted. Angry professors have been dispatched to your location to check your ID card.");
+
+            // Spawn the "Sorry Sir" button after 8 seconds
+            setTimeout(() => {
+                const sorryBtn = document.createElement('button');
+                sorryBtn.innerText = "SORRY SIR, PLEASE FORGIVE ME";
+                sorryBtn.style.position = 'fixed';
+                sorryBtn.style.top = '50%';
+                sorryBtn.style.left = '50%';
+                sorryBtn.style.transform = 'translate(-50%, -50%)';
+                sorryBtn.style.padding = '20px 40px';
+                sorryBtn.style.fontSize = '2rem';
+                sorryBtn.style.fontWeight = 'bold';
+                sorryBtn.style.background = 'blue';
+                sorryBtn.style.color = 'white';
+                sorryBtn.style.border = '10px dashed yellow';
+                sorryBtn.style.zIndex = '99999999';
+                sorryBtn.style.cursor = 'pointer';
+                sorryBtn.style.animation = 'panicFlash 0.5s infinite'; // Uses the existing flashing animation
+                
+                sorryBtn.onclick = () => {
+                    // Remove all angry professors
+                    document.querySelectorAll('.faculty-popup').forEach(el => el.remove());
+                    // Remove this button
+                    sorryBtn.remove();
+                    
+                    alertModal("The professors have accepted your apology and left. But your terminal mode stays as a punishment.");
+                };
+                
+                document.body.appendChild(sorryBtn);
+            }, 8000);
+        }
+
+        function triggerAlumniFeature() {
+            const site = document.getElementById('main-site');
+            site.classList.toggle('effect-upsidedown');
+            showNastyMessage("Alumni Network", "Our alumni are happily settled in the US, but we will still turn your world upside down to ask for donations in Rupees.");
+        }
+
+        function showNastyMessage(title, text) {
+            const box = document.createElement('div');
+            box.style.cssText = "position:fixed; top:20px; right:20px; background:var(--worst-magenta); border:5px double yellow; color:white; padding:20px; width:300px; z-index:99999; box-shadow: 10px 10px 0 var(--worst-blue); font-family: monospace;";
+            box.innerHTML = `
+                <h3 style="margin-top:0; color:yellow;">[NOTICE BOARD]: ${title}</h3>
+                <p>${text}</p>
+                <button onclick="this.parentElement.remove()" style="background:black; color:white; padding:5px; float:right;">Acknowledge Defeat</button>
+            `;
+            document.body.appendChild(box);
+            setTimeout(() => {
+                if(box.parentElement) box.remove();
+            }, 8000);
+        }
+    </script>
+</body>
+</html>
